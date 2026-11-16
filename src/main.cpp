@@ -80,6 +80,21 @@ void noise(sil::Image &image) // Prend l'image par référence pour pouvoir la m
     }
 }
 
+sil::Image turn_90_deg(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
+{
+    sil::Image new_image{image.height(), image.width()};
+
+    for (int x{0}; x < image.width(); x++)
+    {
+        for (int y{0}; y < image.height(); y++)
+        {
+            new_image.pixel(new_image.width()-1-y, x) = image.pixel(x,y);
+        }
+    }
+
+    return new_image;
+}
+
 int main()
 {
     // {
@@ -112,9 +127,13 @@ int main()
     //     mirror(image);
     //     image.save("output/mirror.png");
     // }
+    // {
+    //     sil::Image image{"images/logo.png"};
+    //     noise(image);
+    //     image.save("output/noise.png");
+    // }
     {
         sil::Image image{"images/logo.png"};
-        noise(image);
-        image.save("output/noise.png");
+        turn_90_deg(image).save("output/90deg.png");
     }
 }
