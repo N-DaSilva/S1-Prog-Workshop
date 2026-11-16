@@ -88,7 +88,26 @@ sil::Image turn_90_deg(sil::Image &image) // Prend l'image par référence pour 
     {
         for (int y{0}; y < image.height(); y++)
         {
-            new_image.pixel(new_image.width()-1-y, x) = image.pixel(x,y);
+            new_image.pixel(new_image.width() - 1 - y, x) = image.pixel(x, y);
+        }
+    }
+
+    return new_image;
+}
+
+sil::Image rgb_split(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
+{
+    sil::Image new_image{image.width(), image.height()};
+
+    const int gap = 15;
+
+    for (int x{0}; x < image.width(); x++)
+    {
+        for (int y{0}; y < image.height(); y++)
+        {
+            new_image.pixel(x, y).r = x >= gap ? image.pixel(x - gap, y).r : 0.f;
+            new_image.pixel(x, y).g = image.pixel(x, y).g;
+            new_image.pixel(x, y).b = x <= image.width()-1-gap ? image.pixel(x + gap, y).r : 0.f;
         }
     }
 
@@ -132,8 +151,12 @@ int main()
     //     noise(image);
     //     image.save("output/noise.png");
     // }
+    // {
+    //     sil::Image image{"images/logo.png"};
+    //     turn_90_deg(image).save("output/90deg.png");
+    // }
     {
         sil::Image image{"images/logo.png"};
-        turn_90_deg(image).save("output/90deg.png");
+        rgb_split(image).save("output/rgb_split.png");
     }
 }
