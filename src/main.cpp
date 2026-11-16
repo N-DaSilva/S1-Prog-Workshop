@@ -129,13 +129,33 @@ void lighten(sil::Image &image)
 
 void darken(sil::Image &image)
 {
-    const float power = 3;
+    const float power = 1.5;
 
     for (glm::vec3 &color : image.pixels())
     {
         color.r = pow(color.r, power);
         color.g = pow(color.g, power);
         color.b = pow(color.b, power);
+    }
+}
+
+void disk(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
+{
+    const int radius = 75;
+    const int centerX = image.width() / 2;
+    const int centerY = image.height() / 2;
+
+    for (int x{0}; x < image.width(); x++)
+    {
+        for (int y{0}; y < image.height(); y++)
+        {
+            if (pow(x - centerX, 2) + pow(y - centerY, 2) < pow(radius,2))
+            {
+                image.pixel(x,y).r = 1;
+                image.pixel(x,y).g = 0.5;
+                image.pixel(x,y).b = 0.7;
+            }
+        }
     }
 }
 
@@ -184,11 +204,26 @@ int main()
     //     sil::Image image{"images/logo.png"};
     //     rgb_split(image).save("output/rgb_split.png");
     // }
+    // {
+    //     sil::Image image{"images/photo.jpg"};
+    //     lighten(image);
+    //     image.save("output/lighten.png");
+    //     darken(image);
+    //     image.save("output/darken.png");
+    // }
+    // {
+    //     sil::Image image{"images/photo.jpg"};
+    //     lighten(image);
+    //     image.save("output/lighten.png");
+    // }
+    // {
+    //     sil::Image image{"images/photo.jpg"};
+    //     darken(image);
+    //     image.save("output/darken.png");
+    // }
     {
-        sil::Image image{"images/photo.jpg"};
-        lighten(image);
-        image.save("output/lighten.png");
-        darken(image);
-        image.save("output/darken.png");
+        sil::Image image{300 /*width*/, 300 /*height*/};
+        disk(image);
+        image.save("output/disk.png");
     }
 }
