@@ -30,6 +30,16 @@ void black_and_white(sil::Image &image) // Prend l'image par référence pour po
     }
 }
 
+void negative(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
+{
+    for (glm::vec3 &color : image.pixels())
+    {
+        color.r = 1 - color.r;
+        color.g = 1 - color.g;
+        color.b = 1 - color.b;
+    }
+}
+
 int main()
 {
     {
@@ -43,8 +53,13 @@ int main()
         image.save("output/channels_swap.png"); // Sauvegarde l'image
     }
     {
-        sil::Image image{"images/logo.png"}; // Lis l'image
-        black_and_white(image); // Utilise la fonction pour modifier l'image
-        image.save("output/black_and_white.png"); // Sauvegarde l'image
+        sil::Image image{"images/logo.png"};
+        black_and_white(image);
+        image.save("output/black_and_white.png");
+    }
+    {
+        sil::Image image{"images/logo.png"};
+        negative(image);
+        image.save("output/negative.png");
     }
 }
