@@ -48,9 +48,9 @@ void gradient(sil::Image &image) // Prend l'image par référence pour pouvoir l
     {
         for (int y{0}; y < image.height(); y++)
         {
-            image.pixel(x, y).r = 0.003 * x;
-            image.pixel(x, y).g = 0.003 * x;
-            image.pixel(x, y).b = 0.003 * x;
+            image.pixel(x, y).r = (1.f / static_cast<float>(image.width())) * x;
+            image.pixel(x, y).g = (1.f / static_cast<float>(image.width())) * x;
+            image.pixel(x, y).b = (1.f / static_cast<float>(image.width())) * x;
         }
     }
 }
