@@ -40,26 +40,44 @@ void negative(sil::Image &image) // Prend l'image par référence pour pouvoir l
     }
 }
 
+void gradient(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
+{
+    for (int x{0}; x < image.width(); x++)
+    {
+        for (int y{0}; y < image.height(); y++)
+        {
+            image.pixel(x, y).r = 0.003 * x;
+            image.pixel(x, y).g = 0.003 * x;
+            image.pixel(x, y).b = 0.003 * x;
+        }
+    }
+}
+
 int main()
 {
+    // {
+    //     sil::Image image{"images/logo.png"};      // Lis l'image
+    //     keep_green_only(image);                   // Utilise la fonction pour modifier l'image
+    //     image.save("output/keep_green_only.png"); // Sauvegarde l'image
+    // }
+    // {
+    //     sil::Image image{"images/logo.png"}; // Lis l'image
+    //     channels_swap(image); // Utilise la fonction pour modifier l'image
+    //     image.save("output/channels_swap.png"); // Sauvegarde l'image
+    // }
+    // {
+    //     sil::Image image{"images/logo.png"};
+    //     black_and_white(image);
+    //     image.save("output/black_and_white.png");
+    // }
+    // {
+    //     sil::Image image{"images/logo.png"};
+    //     negative(image);
+    //     image.save("output/negative.png");
+    // }
     {
-        sil::Image image{"images/logo.png"};      // Lis l'image
-        keep_green_only(image);                   // Utilise la fonction pour modifier l'image
-        image.save("output/keep_green_only.png"); // Sauvegarde l'image
-    }
-    {
-        sil::Image image{"images/logo.png"}; // Lis l'image
-        channels_swap(image); // Utilise la fonction pour modifier l'image
-        image.save("output/channels_swap.png"); // Sauvegarde l'image
-    }
-    {
-        sil::Image image{"images/logo.png"};
-        black_and_white(image);
-        image.save("output/black_and_white.png");
-    }
-    {
-        sil::Image image{"images/logo.png"};
-        negative(image);
-        image.save("output/negative.png");
+        sil::Image image{300 /*width*/, 200 /*height*/};
+        gradient(image);
+        image.save("output/gradient.png");
     }
 }
