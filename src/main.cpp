@@ -19,6 +19,17 @@ void channels_swap(sil::Image &image) // Prend l'image par référence pour pouv
     }
 }
 
+void black_and_white(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
+{
+    for (glm::vec3 &color : image.pixels())
+    {
+        float luminance = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+        color.r = luminance;
+        color.g = luminance;
+        color.b = luminance;
+    }
+}
+
 int main()
 {
     {
@@ -30,5 +41,10 @@ int main()
         sil::Image image{"images/logo.png"}; // Lis l'image
         channels_swap(image); // Utilise la fonction pour modifier l'image
         image.save("output/channels_swap.png"); // Sauvegarde l'image
+    }
+    {
+        sil::Image image{"images/logo.png"}; // Lis l'image
+        black_and_white(image); // Utilise la fonction pour modifier l'image
+        image.save("output/black_and_white.png"); // Sauvegarde l'image
     }
 }
