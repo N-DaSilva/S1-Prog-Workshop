@@ -1,5 +1,6 @@
 #include <sil/sil.hpp>
 #include "random.hpp"
+#include <cmath>
 
 void keep_green_only(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
 {
@@ -107,11 +108,35 @@ sil::Image rgb_split(sil::Image &image) // Prend l'image par référence pour po
         {
             new_image.pixel(x, y).r = x >= gap ? image.pixel(x - gap, y).r : 0.f;
             new_image.pixel(x, y).g = image.pixel(x, y).g;
-            new_image.pixel(x, y).b = x <= image.width()-1-gap ? image.pixel(x + gap, y).r : 0.f;
+            new_image.pixel(x, y).b = x <= image.width() - 1 - gap ? image.pixel(x + gap, y).r : 0.f;
         }
     }
 
     return new_image;
+}
+
+void lighten(sil::Image &image)
+{
+    const float power = 0.5;
+
+    for (glm::vec3 &color : image.pixels())
+    {
+        color.r = pow(color.r, power);
+        color.g = pow(color.g, power);
+        color.b = pow(color.b, power);
+    }
+}
+
+void darken(sil::Image &image)
+{
+    const float power = 3;
+
+    for (glm::vec3 &color : image.pixels())
+    {
+        color.r = pow(color.r, power);
+        color.g = pow(color.g, power);
+        color.b = pow(color.b, power);
+    }
 }
 
 int main()
@@ -155,8 +180,15 @@ int main()
     //     sil::Image image{"images/logo.png"};
     //     turn_90_deg(image).save("output/90deg.png");
     // }
+    // {
+    //     sil::Image image{"images/logo.png"};
+    //     rgb_split(image).save("output/rgb_split.png");
+    // }
     {
-        sil::Image image{"images/logo.png"};
-        rgb_split(image).save("output/rgb_split.png");
+        sil::Image image{"images/photo.jpg"};
+        lighten(image);
+        image.save("output/lighten.png");
+        darken(image);
+        image.save("output/darken.png");
     }
 }
