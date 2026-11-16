@@ -1,4 +1,5 @@
 #include <sil/sil.hpp>
+#include "random.hpp"
 
 void keep_green_only(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
 {
@@ -55,13 +56,26 @@ void gradient(sil::Image &image) // Prend l'image par référence pour pouvoir l
 
 void mirror(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
 {
-    for (int x{0}; x < image.width()/2; x++)
+    for (int x{0}; x < image.width() / 2; x++)
     {
         for (int y{0}; y < image.height(); y++)
         {
-            glm::vec3 temp_color = image.pixel(x,y);
+            glm::vec3 temp_color = image.pixel(x, y);
             image.pixel(x, y) = image.pixel(image.width() - 1 - x, y);
             image.pixel(image.width() - 1 - x, y) = temp_color;
+        }
+    }
+}
+
+void noise(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
+{
+    for (glm::vec3 &color : image.pixels())
+    {
+        if (true_with_probability(0.15))
+        {
+            color.r = random_float(0.f, 1.f);
+            color.g = random_float(0.f, 1.f);
+            color.b = random_float(0.f, 1.f);
         }
     }
 }
@@ -93,9 +107,14 @@ int main()
     //     gradient(image);
     //     image.save("output/gradient.png");
     // }
+    // {
+    //     sil::Image image{"images/logo.png"};
+    //     mirror(image);
+    //     image.save("output/mirror.png");
+    // }
     {
         sil::Image image{"images/logo.png"};
-        mirror(image);
-        image.save("output/mirror.png");
+        noise(image);
+        image.save("output/noise.png");
     }
 }
