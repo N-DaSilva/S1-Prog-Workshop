@@ -1,6 +1,7 @@
 #include <sil/sil.hpp>
 #include "random.hpp"
 #include <cmath>
+#include <string>
 
 void keep_green_only(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
 {
@@ -139,9 +140,28 @@ void darken(sil::Image &image)
     }
 }
 
-void disk(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
+void disk(sil::Image &image, int centerX, int centerY) // Prend l'image par référence pour pouvoir la modifier
 {
     const int radius = 75;
+
+    for (int x{0}; x < image.width(); x++)
+    {
+        for (int y{0}; y < image.height(); y++)
+        {
+            if (pow(x - centerX, 2) + pow(y - centerY, 2) < pow(radius, 2))
+            {
+                image.pixel(x, y).r = 1;
+                image.pixel(x, y).g = 0.5;
+                image.pixel(x, y).b = 0.7;
+            }
+        }
+    }
+}
+
+void circle(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
+{
+    const int radius = 75;
+    const int width = 5;
     const int centerX = image.width() / 2;
     const int centerY = image.height() / 2;
 
@@ -149,13 +169,25 @@ void disk(sil::Image &image) // Prend l'image par référence pour pouvoir la mo
     {
         for (int y{0}; y < image.height(); y++)
         {
-            if (pow(x - centerX, 2) + pow(y - centerY, 2) < pow(radius,2))
+            if ((pow(x - centerX, 2) + pow(y - centerY, 2) < pow(radius, 2)) && (pow(x - centerX, 2) + pow(y - centerY, 2) >= pow(radius - width, 2)))
             {
-                image.pixel(x,y).r = 1;
-                image.pixel(x,y).g = 0.5;
-                image.pixel(x,y).b = 0.7;
+                image.pixel(x, y).r = 1;
+                image.pixel(x, y).g = 0.5;
+                image.pixel(x, y).b = 0.7;
             }
         }
+    }
+}
+
+void animation()
+{
+    const int start = 20;
+    for (int i{0}; i < 300; i+=5)
+    {
+        sil::Image image{300 /*width*/, 300 /*height*/};
+        disk(image, start + i, image.height()/2);
+        std::string filepath {"output/gif/" + std::to_string(i) + ".png"};
+        image.save(filepath);
     }
 }
 
@@ -221,9 +253,17 @@ int main()
     //     darken(image);
     //     image.save("output/darken.png");
     // }
+    // {
+    //     sil::Image image{300 /*width*/, 300 /*height*/};
+    //     disk(image, image.width() / 2, image.height() / 2);
+    //     image.save("output/disk.png");
+    // }
+    // {
+    //     sil::Image image{300 /*width*/, 300 /*height*/};
+    //     circle(image);
+    //     image.save("output/circle.png");
+    // }
     {
-        sil::Image image{300 /*width*/, 300 /*height*/};
-        disk(image);
-        image.save("output/disk.png");
+        animation();
     }
 }
