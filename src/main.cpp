@@ -53,6 +53,19 @@ void gradient(sil::Image &image) // Prend l'image par référence pour pouvoir l
     }
 }
 
+void mirror(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
+{
+    for (int x{0}; x < image.width()/2; x++)
+    {
+        for (int y{0}; y < image.height(); y++)
+        {
+            glm::vec3 temp_color = image.pixel(x,y);
+            image.pixel(x, y) = image.pixel(image.width() - 1 - x, y);
+            image.pixel(image.width() - 1 - x, y) = temp_color;
+        }
+    }
+}
+
 int main()
 {
     // {
@@ -75,9 +88,14 @@ int main()
     //     negative(image);
     //     image.save("output/negative.png");
     // }
+    // {
+    //     sil::Image image{300 /*width*/, 200 /*height*/};
+    //     gradient(image);
+    //     image.save("output/gradient.png");
+    // }
     {
-        sil::Image image{300 /*width*/, 200 /*height*/};
-        gradient(image);
-        image.save("output/gradient.png");
+        sil::Image image{"images/logo.png"};
+        mirror(image);
+        image.save("output/mirror.png");
     }
 }
