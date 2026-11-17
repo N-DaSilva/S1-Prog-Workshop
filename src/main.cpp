@@ -2,6 +2,7 @@
 #include "random.hpp"
 #include <cmath>
 #include <string>
+#include <iostream>
 
 void keep_green_only(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
 {
@@ -158,18 +159,17 @@ void disk(sil::Image &image, int centerX, int centerY) // Prend l'image par réf
     }
 }
 
-void circle(sil::Image &image) // Prend l'image par référence pour pouvoir la modifier
+void circle(sil::Image &image, int centerX, int centerY) // Prend l'image par référence pour pouvoir la modifier
 {
+    std::cout << centerX << ", " << centerY << std::endl;
     const int radius = 75;
-    const int width = 5;
-    const int centerX = image.width() / 2;
-    const int centerY = image.height() / 2;
+    const int thickness = 4;
 
     for (int x{0}; x < image.width(); x++)
     {
         for (int y{0}; y < image.height(); y++)
         {
-            if ((pow(x - centerX, 2) + pow(y - centerY, 2) < pow(radius, 2)) && (pow(x - centerX, 2) + pow(y - centerY, 2) >= pow(radius - width, 2)))
+            if ((pow(x - centerX, 2) + pow(y - centerY, 2) < pow(radius, 2)) && (pow(x - centerX, 2) + pow(y - centerY, 2) >= pow(radius - thickness, 2)))
             {
                 image.pixel(x, y).r = 1;
                 image.pixel(x, y).g = 0.5;
@@ -188,6 +188,22 @@ void animation()
         disk(image, start + i, image.height()/2);
         std::string filepath {"output/gif/" + std::to_string(i) + ".png"};
         image.save(filepath);
+    }
+}
+
+void rosace(sil::Image &image)
+{
+    circle(image, image.width()/2, image.height()/2);
+    for (int i{0}; i < 12; i+=2)
+    {
+        const double angle = (acos(0.0)/3)*i;
+        int centerX {image.width()/2+75 * cos(angle)};
+        int centerY {image.width()/2+75 * sin(angle)};
+
+        centerX = centerX > 150 ? centerX - 1 : centerX + 1;
+        centerY = (centerY > 150) && (centerY != 150) ? centerY - 1 : centerY + 1;
+
+        circle(image, centerX, centerY);
     }
 }
 
@@ -260,10 +276,15 @@ int main()
     // }
     // {
     //     sil::Image image{300 /*width*/, 300 /*height*/};
-    //     circle(image);
+    //     circle(image, image.width() / 2, image.height() / 2);
     //     image.save("output/circle.png");
     // }
+    // {
+    //     animation();
+    // }
     {
-        animation();
+        sil::Image image{300 /*width*/, 300 /*height*/};
+        rosace(image);
+        image.save("output/rosace.png");
     }
 }
