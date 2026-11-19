@@ -232,20 +232,88 @@ sil::Image mirrored_mosaic(sil::Image image, int repetitions)
             int x_value = (x * repetitions) % image.width();
             int y_value = (y * repetitions) % image.height();
 
-            if (((x*repetitions)/(image.width()-1)) % 2 == 1)
+            if (((x * repetitions) / (image.width() - 1)) % 2 == 1)
             {
-                x_value = (((image.width()-1) - x) * repetitions) % image.width();
+                x_value = (((image.width() - 1) - x) * repetitions) % image.width();
             }
 
-            if (((y*repetitions)/(image.height()-1)) % 2 == 1)
+            if (((y * repetitions) / (image.height() - 1)) % 2 == 1)
             {
-                y_value = (((image.height()-1) - y) * repetitions) % image.height();
+                y_value = (((image.height() - 1) - y) * repetitions) % image.height();
             }
 
             new_image.pixel(x, y) = image.pixel(x_value, y_value);
         }
     }
     return new_image;
+}
+
+void white_noise_map(sil::Image &image)
+{
+    for (glm::vec3 &color : image.pixels())
+    {
+        float brightness = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+        float random_value = random_float(0.f, 1.f);
+
+        if (brightness > random_value)
+        {
+            color.r = 1.f;
+            color.g = 1.f;
+            color.b = 1.f;
+        }
+        else
+        {
+            color.r = 0.f;
+            color.g = 0.f;
+            color.b = 0.f;
+        }
+    }
+}
+
+void bayer_map(sil::Image &image)
+{
+    const int bayer_n = 4;
+    float bayer_matrix_4x4[][bayer_n] = {
+        {-0.5, 0, -0.375, 0.125},
+        {0.25, -0.25, 0.375, -0.125},
+        {-0.3125, 0.1875, -0.4375, 0.0625},
+        {0.4375, -0.0625, 0.3125, -0.1875},
+    };
+
+    for (int x{0}; x < image.width(); x++)
+    {
+        for (int y{0}; y < image.height(); y++)
+        {
+            glm::vec3 &color = image.pixel(x, y);
+            float brightness = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+            const float output_color = brightness + (bayer_matrix_4x4[x % bayer_n][y % bayer_n]);
+
+            if (output_color > 0.5)
+            {
+                color.r = 1.f;
+                color.g = 1.f;
+                color.b = 1.f;
+            } else
+            {
+                color.r = 0.f;
+                color.g = 0.f;
+                color.b = 0.f;
+            }
+        }
+    }
+}
+
+void dither(sil::Image &image, std::string map)
+{
+    if (map == "bayer")
+    {
+        bayer_map(image);
+    }
+
+    if (map == "white noise")
+    {
+        white_noise_map(image);
+    }
 }
 
 int main()
@@ -332,8 +400,13 @@ int main()
     //     sil::Image image{"images/logo.png"};
     //     mosaic(image, 5).save("output/mosaic.png");
     // }
+    // {
+    //     sil::Image image{"images/logo.png"};
+    //     mirrored_mosaic(image, 5).save("output/mirrored_mosaic.png");
+    // }
     {
-        sil::Image image{"images/logo.png"};
-        mirrored_mosaic(image, 5).save("output/mirrored_mosaic.png");
+        sil::Image image{"images/photo.jpg"};
+        dither(image, "bayer");
+        image.save("output/dither.jpg");
     }
 }
