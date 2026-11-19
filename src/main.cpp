@@ -182,29 +182,70 @@ void circle(sil::Image &image, int centerX, int centerY) // Prend l'image par r√
 void animation()
 {
     const int start = 20;
-    for (int i{0}; i < 300; i+=5)
+    for (int i{0}; i < 300; i += 5)
     {
         sil::Image image{300 /*width*/, 300 /*height*/};
-        disk(image, start + i, image.height()/2);
-        std::string filepath {"output/gif/" + std::to_string(i) + ".png"};
+        disk(image, start + i, image.height() / 2);
+        std::string filepath{"output/gif/" + std::to_string(i) + ".png"};
         image.save(filepath);
     }
 }
 
 void rosace(sil::Image &image)
 {
-    circle(image, image.width()/2, image.height()/2);
-    for (int i{0}; i < 12; i+=2)
+    circle(image, image.width() / 2, image.height() / 2);
+    for (int i{0}; i < 12; i += 2)
     {
-        const double angle = (acos(0.0)/3)*i;
-        int centerX {image.width()/2+75 * cos(angle)};
-        int centerY {image.width()/2+75 * sin(angle)};
+        const double angle = (acos(0.0) / 3) * i;
+        int centerX{image.width() / 2 + 75 * cos(angle)};
+        int centerY{image.width() / 2 + 75 * sin(angle)};
 
         centerX = centerX > 150 ? centerX - 1 : centerX + 1;
         centerY = (centerY > 150) && (centerY != 150) ? centerY - 1 : centerY + 1;
 
         circle(image, centerX, centerY);
     }
+}
+
+sil::Image mosaic(sil::Image image, int repetitions)
+{
+    sil::Image new_image{image.width(), image.height()};
+
+    for (int x{0}; x < image.width(); x++)
+    {
+        for (int y{0}; y < image.height(); y++)
+        {
+            new_image.pixel(x, y) = image.pixel((x * repetitions) % image.width(), (y * repetitions) % image.height());
+        }
+    }
+    return new_image;
+}
+
+sil::Image mirrored_mosaic(sil::Image image, int repetitions)
+{
+    sil::Image new_image{image.width(), image.height()};
+
+    for (int x{0}; x < image.width(); x++)
+    {
+        for (int y{0}; y < image.height(); y++)
+        {
+            int x_value = (x * repetitions) % image.width();
+            int y_value = (y * repetitions) % image.height();
+
+            if (((x*repetitions)/(image.width()-1)) % 2 == 1)
+            {
+                x_value = (((image.width()-1) - x) * repetitions) % image.width();
+            }
+
+            if (((y*repetitions)/(image.height()-1)) % 2 == 1)
+            {
+                y_value = (((image.height()-1) - y) * repetitions) % image.height();
+            }
+
+            new_image.pixel(x, y) = image.pixel(x_value, y_value);
+        }
+    }
+    return new_image;
 }
 
 int main()
@@ -282,9 +323,17 @@ int main()
     // {
     //     animation();
     // }
+    // {
+    //     sil::Image image{300 /*width*/, 300 /*height*/};
+    //     rosace(image);
+    //     image.save("output/rosace.png");
+    // }
+    // {
+    //     sil::Image image{"images/logo.png"};
+    //     mosaic(image, 5).save("output/mosaic.png");
+    // }
     {
-        sil::Image image{300 /*width*/, 300 /*height*/};
-        rosace(image);
-        image.save("output/rosace.png");
+        sil::Image image{"images/logo.png"};
+        mirrored_mosaic(image, 5).save("output/mirrored_mosaic.png");
     }
 }
