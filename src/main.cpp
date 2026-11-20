@@ -161,7 +161,6 @@ void disk(sil::Image &image, int centerX, int centerY) // Prend l'image par réf
 
 void circle(sil::Image &image, int centerX, int centerY) // Prend l'image par référence pour pouvoir la modifier
 {
-    std::cout << centerX << ", " << centerY << std::endl;
     const int radius = 75;
     const int thickness = 4;
 
@@ -346,97 +345,95 @@ void convolution(sil::Image &image, std::vector<std::vector<float>> &kernel)
 
 int main()
 {
-    // {
-    //     sil::Image image{"images/logo.png"};      // Lis l'image
-    //     keep_green_only(image);                   // Utilise la fonction pour modifier l'image
-    //     image.save("output/keep_green_only.png"); // Sauvegarde l'image
-    // }
-    // {
-    //     sil::Image image{"images/logo.png"}; // Lis l'image
-    //     channels_swap(image); // Utilise la fonction pour modifier l'image
-    //     image.save("output/channels_swap.png"); // Sauvegarde l'image
-    // }
-    // {
-    //     sil::Image image{"images/logo.png"};
-    //     black_and_white(image);
-    //     image.save("output/black_and_white.png");
-    // }
-    // {
-    //     sil::Image image{"images/logo.png"};
-    //     negative(image);
-    //     image.save("output/negative.png");
-    // }
-    // {
-    //     sil::Image image{300 /*width*/, 200 /*height*/};
-    //     gradient(image);
-    //     image.save("output/gradient.png");
-    // }
-    // {
-    //     sil::Image image{"images/logo.png"};
-    //     mirror(image);
-    //     image.save("output/mirror.png");
-    // }
-    // {
-    //     sil::Image image{"images/logo.png"};
-    //     noise(image);
-    //     image.save("output/noise.png");
-    // }
-    // {
-    //     sil::Image image{"images/logo.png"};
-    //     turn_90_deg(image).save("output/90deg.png");
-    // }
-    // {
-    //     sil::Image image{"images/logo.png"};
-    //     rgb_split(image).save("output/rgb_split.png");
-    // }
-    // {
-    //     sil::Image image{"images/photo.jpg"};
-    //     lighten(image);
-    //     image.save("output/lighten.png");
-    //     darken(image);
-    //     image.save("output/darken.png");
-    // }
-    // {
-    //     sil::Image image{"images/photo.jpg"};
-    //     lighten(image);
-    //     image.save("output/lighten.png");
-    // }
-    // {
-    //     sil::Image image{"images/photo.jpg"};
-    //     darken(image);
-    //     image.save("output/darken.png");
-    // }
-    // {
-    //     sil::Image image{300 /*width*/, 300 /*height*/};
-    //     disk(image, image.width() / 2, image.height() / 2);
-    //     image.save("output/disk.png");
-    // }
-    // {
-    //     sil::Image image{300 /*width*/, 300 /*height*/};
-    //     circle(image, image.width() / 2, image.height() / 2);
-    //     image.save("output/circle.png");
-    // }
-    // {
-    //     animation();
-    // }
-    // {
-    //     sil::Image image{300 /*width*/, 300 /*height*/};
-    //     rosace(image);
-    //     image.save("output/rosace.png");
-    // }
-    // {
-    //     sil::Image image{"images/logo.png"};
-    //     mosaic(image, 5).save("output/mosaic.png");
-    // }
-    // {
-    //     sil::Image image{"images/logo.png"};
-    //     mirrored_mosaic(image, 5).save("output/mirrored_mosaic.png");
-    // }
-    // {
-    //     sil::Image image{"images/photo.jpg"};
-    //     dither(image, "bayer");
-    //     image.save("output/dither.jpg");
-    // }
+    {
+        sil::Image image{"images/logo.png"};      // Lis l'image
+        keep_green_only(image);                   // Utilise la fonction pour modifier l'image
+        image.save("output/keep_green_only.png"); // Sauvegarde l'image
+    }
+    {
+        sil::Image image{"images/logo.png"}; // Lis l'image
+        channels_swap(image); // Utilise la fonction pour modifier l'image
+        image.save("output/channels_swap.png"); // Sauvegarde l'image
+    }
+    {
+        sil::Image image{"images/logo.png"};
+        black_and_white(image);
+        image.save("output/black_and_white.png");
+    }
+    {
+        sil::Image image{"images/logo.png"};
+        negative(image);
+        image.save("output/negative.png");
+    }
+    {
+        sil::Image image{300 /*width*/, 200 /*height*/};
+        gradient(image);
+        image.save("output/gradient.png");
+    }
+    {
+        sil::Image image{"images/logo.png"};
+        mirror(image);
+        image.save("output/mirror.png");
+    }
+    {
+        sil::Image image{"images/logo.png"};
+        noise(image);
+        image.save("output/noise.png");
+    }
+    {
+        sil::Image image{"images/logo.png"};
+        turn_90_deg(image).save("output/90deg.png");
+    }
+    {
+        sil::Image image{"images/logo.png"};
+        rgb_split(image).save("output/rgb_split.png");
+    }
+    {
+        sil::Image image{"images/photo.jpg"};
+        lighten(image);
+        image.save("output/lighten.jpg");
+    }
+    {
+        sil::Image image{"images/photo.jpg"};
+        darken(image);
+        image.save("output/darken.jpg");
+    }
+    {
+        sil::Image image{300 /*width*/, 300 /*height*/};
+        disk(image, image.width() / 2, image.height() / 2);
+        image.save("output/disk.png");
+    }
+    {
+        sil::Image image{300 /*width*/, 300 /*height*/};
+        circle(image, image.width() / 2, image.height() / 2);
+        image.save("output/circle.png");
+    }
+    {
+        animation();
+    }
+    {
+        sil::Image image{300 /*width*/, 300 /*height*/};
+        rosace(image);
+        image.save("output/rosace.png");
+    }
+    {
+        sil::Image image{"images/logo.png"};
+        mosaic(image, 5).save("output/mosaic.png");
+    }
+    {
+        sil::Image image{"images/logo.png"};
+        mirrored_mosaic(image, 5).save("output/mirrored_mosaic.png");
+    }
+    {
+        sil::Image image{"images/photo.jpg"};
+        dither(image, "bayer");
+        image.save("output/dither.jpg");
+    }
+    {
+        sil::Image image{"images/photo.jpg"};
+        dither(image, "white noise");
+        image.save("output/white_noise.jpg");
+    }
     {
         std::vector<std::vector<float>> box_blur_kernel =
         {{1.f/9.f,1.f/9.f,1.f/9.f},
@@ -453,6 +450,11 @@ int main()
         {-1.f,8.f,-1.f},
         {-1.f,-1.f,-1.f}};
 
+        std::vector<std::vector<float>> sharpen_kernel =
+        {{0.f,-1.f,0.f},
+        {-1.f,5.f,-1.f},
+        {0.f,-1.f,0.f}};
+
         sil::Image image{"images/logo.png"};
         convolution(image, box_blur_kernel);
         image.save("output/convolution_box_blur.png");
@@ -464,5 +466,9 @@ int main()
         sil::Image image3{"images/logo.png"};
         convolution(image3, outline_kernel);
         image3.save("output/convolution_outline.png");
+
+        sil::Image image4{"images/logo.png"};
+        convolution(image4, sharpen_kernel);
+        image4.save("output/convolution_sharpen.png");
     }
 }
