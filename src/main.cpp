@@ -293,7 +293,8 @@ void bayer_map(sil::Image &image)
                 color.r = 1.f;
                 color.g = 1.f;
                 color.b = 1.f;
-            } else
+            }
+            else
             {
                 color.r = 0.f;
                 color.g = 0.f;
@@ -313,6 +314,33 @@ void dither(sil::Image &image, std::string map)
     if (map == "white noise")
     {
         white_noise_map(image);
+    }
+}
+
+void convolution(sil::Image &image, std::vector<std::vector<float>> &kernel)
+{
+    sil::Image const original = image;
+    int radius = kernel.size()/2.f;
+
+    for (int x{0}; x < image.width(); x++)
+    {
+        for (int y{0}; y < image.height(); y++)
+        {
+            glm::vec3 sum{0.f};
+
+            for (int kx{0}; kx < kernel.size(); kx++)
+            {
+                for (int ky{0}; ky < kernel.size(); ky++)
+                {
+                    int const neighbor_x = std::max(0, std::min(x + kx - radius, image.width() - 1));
+                    int const neighbor_y = std::max(0, std::min(y + ky - radius, image.height() - 1));
+
+                    sum += kernel[kx][ky] * original.pixel(neighbor_x,neighbor_y);
+                }
+            }
+
+            image.pixel(x,y) = sum;
+        }
     }
 }
 
@@ -404,9 +432,37 @@ int main()
     //     sil::Image image{"images/logo.png"};
     //     mirrored_mosaic(image, 5).save("output/mirrored_mosaic.png");
     // }
+    // {
+    //     sil::Image image{"images/photo.jpg"};
+    //     dither(image, "bayer");
+    //     image.save("output/dither.jpg");
+    // }
     {
-        sil::Image image{"images/photo.jpg"};
-        dither(image, "bayer");
-        image.save("output/dither.jpg");
+        std::vector<std::vector<float>> box_blur_kernel =
+        {{1.f/9.f,1.f/9.f,1.f/9.f},
+        {1.f/9.f,1.f/9.f,1.f/9.f},
+        {1.f/9.f,1.f/9.f,1.f/9.f}};
+
+        std::vector<std::vector<float>> emboss_kernel =
+        {{-2.f,-1.f,0.f},
+        {-1.f,1.f,1.f},
+        {0.f,1.f,2.f}};
+
+        std::vector<std::vector<float>> outline_kernel =
+        {{-1.f,-1.f,-1.f},
+        {-1.f,8.f,-1.f},
+        {-1.f,-1.f,-1.f}};
+
+        sil::Image image{"images/logo.png"};
+        convolution(image, box_blur_kernel);
+        image.save("output/convolution_box_blur.png");
+
+        sil::Image image2{"images/logo.png"};
+        convolution(image2, emboss_kernel);
+        image2.save("output/convolution_emboss.png");
+
+        sil::Image image3{"images/logo.png"};
+        convolution(image3, outline_kernel);
+        image3.save("output/convolution_outline.png");
     }
 }
